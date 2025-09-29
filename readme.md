@@ -1,57 +1,27 @@
-# Mamba-ST: State Space Model for Efficient Style Transfer (WACV 2025)
-*Authors: Filippo Botti, Alex Ergasti, Leonardo Rossi, Tomaso Fontanini, Claudio Ferrari, Massimo Bertozzi and Andrea Prati*
-
-This repository is the official implementation of [Mamba-ST: State Space Model for Efficient Style Transfer](https://www.arxiv.org/abs/2409.10385).
-
-This paper explores a novel design of Mamba, called Mamba-ST, to perform style transfer.
-
-## Results presentation 
-<p align="center">
-<img src="https://github.com/FilippoBotti/MambaST/blob/main/Figure/generated_images.jpg" width="90%" height="90%">
-</p>
-Examples of generated images from our Mamba model given a style and a content image. <br>
-
-
-## Framework
-<p align="center">
-<img src="https://github.com/FilippoBotti/MambaST/blob/main/Figure/Mamba-Arch.png" width="100%" height="100%">
-</p> 
-a) Mamba-ST full architecture. It takes as input a content and a style image and generates the content image stylized as the style image. b) Mamba encoder with an additional skip connection (rightmost). c) Our Mamba-ST Decoder, which takes both style and content as input. In particular, style embeddings are shuffled before passing to ST-VSSM in order to loose spatial information, maintaining only higher level information. d) The inner architecture of the Base VSSM. e) The inner architecture of the Base 2D-SSM. f) Our ST-VSSM. Notably, DWConv is shared among content and style embedding. g) Our modified ST 2D-SSM, where the matrices A, B and Delta are computed from the style, the input of the selective scan are the style embedding and the matrix C is calculated using the content.
 
 ## Experiment
 ### Requirements
 In order to run the project please install the environment by following these commands: 
 ```
-conda create -n mambast
+conda create -n TMamba python=3.10
 pip install -r requirements.txt
-conda activate mambast
+conda activate TMamba
 ```
-
-You can find the random images used in order to generated the results inside ./data folder.
-Please modify all the .sh files with the correct path for your checkpoints and images before 
-running the following instructions.
 
 ### Evaluation 
-[Pretrained models] (https://drive.google.com/drive/folders/1pVhJFwk2f3arP7zUDFAe5_PJrPSG1gc2?usp=drive_link) <br> 
-```
-sh scripts/eval.sh
-# Before executing evalution code in order to calculate the metrics,
-# please duplicate the content and style images to match the number of stylized images first. 
-# (40 styles, 20 contents -> 800 style images, 800 content images)
-python evaluation/copy_inputs.py --cnt PATH_FOR_CONTENT_IMAGES --sty PATH_FOR_STYLE_IMAGES
-sh evaluation/eval.sh
-```
+[Pretrained models] ([https://drive.google.com/drive/folders/1pVhJFwk2f3arP7zUDFAe5_PJrPSG1gc2?usp=drive_link](https://drive.google.com/drive/folders/1Zvkspmz5HiCT3M5_BgYbDlKljtgcOYcj?usp=drive_link)) <br> 
+
 
 ### Testing
 ```
-sh scripts/test.sh
+python
 ```
 
 ### Training  
 Style dataset is WikiArt collected from [WIKIART](https://www.wikiart.org/)  <br>  
 content dataset is COCO2014  <br>  
 ```
-sh scripts/train.sh
+python main.py --content_dir ./data/cnt --style_dir ./data/sty --mode train
 ```
 
 ## Code explanation
